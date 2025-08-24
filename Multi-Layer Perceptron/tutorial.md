@@ -1,8 +1,10 @@
 ## 深度学习领域的 "Hello World" —— 基于多层感知机(MLP)的MNIST手写数字识别
 
 我做这个**Deep Learning for Beginners**项目的初衷是给一位学管理学的好友一些深度学习上的参考，加上我在学习的时候也踩了一些坑，所以我准备做一个系列大概5-6篇文章，带一些代码水平比较差的甚至是管理学这种偏文科的专业的同学入门深度学习，作者本人水平其实也很有限，写这篇文章的时候只是一个大一的学生，我觉得可能从我的角度去讲可能更好理解一点，我认为既然是新手入门我们就不要过度关注原理，并不是说原理不重要，但是一开始就从数学的角度看原理，一个是很枯燥，另一个是太拖进度，所以我更倾向于这一轮结束我们再去补原理。不过在未来的大概半年到一年的时间里我会推出一个系列，通过Numpy从零手搓一个类似Pytorch的玩具级的深度学习框架，细致到每一步的数学推导的，从底层的数学公式去理解神经网络的内部推演运算，不过我还在补很多底层的东西，敬请期待吧……
+<br>
 
 **下面开始我们的第一个项目吧！基于MLP的MNIST手写数字识别**
+<br>
 
 首先先来简单介绍一下**MNIST**数据集，全称是**Modified National Institute of Standards and Technology**，是机器学习领域最经典的入门级图像数据集了，包含了60000张训练图像和10000张测试图像，每张图像都是28x28的灰度图像，像素值在0到255之间，标签是0到9的数字，代表了图像中手写的数字。
 
@@ -15,6 +17,7 @@ flowchart LR
 ```
 
 **那么就不多废话了直接进入代码部分！**
+<br>
 
 首先来导入必要的包：
 ```python
@@ -25,6 +28,7 @@ from torchvision import datasets
 from torchvision.transforms import ToTensor
 import matplotlib.pyplot as plt
 ```
+<br>
 
 然后就是数据工程了，其实对于这个项目来说很简单，就是下载数据集，等后续到我们自己的数据集了我们可能就需要进行一些处理，然后再划分训练集和测试集。
 ```python
@@ -51,6 +55,7 @@ test_data = datasets.MNIST(
 train_dataloader = DataLoader(training_data, batch_size=64)
 test_dataloader = DataLoader(test_data, batch_size=64)
 ```
+<br>
 
 数据集准备好了下面我们就可以开始搭建神经网络了!
 ```python
@@ -79,6 +84,7 @@ class MLP(nn.Module):
 现在使用`784→512→256→128→10`的结构，有助于特征的逐步抽象和压缩。
 
 `torch.relu()`是激活函数，这里我们使用的是ReLU激活函数，当然你也可以使用其他的激活函数，比如Sigmoid，Tanh等。
+<br>
 
 然后我们就可以开始写训练部分了，我一般喜欢写成一个函数然后在`if __name__ == '__main__':`中调用:
 ```python
@@ -106,7 +112,7 @@ def train(model, dataloader, loss_function, optimizer):
     train_loss_history.append(avg_loss)
 ```
 训练的过程就是不断地迭代数据集，然后计算损失，反向传播，更新参数，直到模型收敛的过程，我们只需要记住这个过程即可，其他的细节我们可以根据需要进行调整。
-
+<br>
 
 接下来我们来写测试部分：
 ```python
@@ -132,6 +138,7 @@ def test(model, dataloader, loss_function):
     print(f"Avg loss: {test_loss}")
 ```
 在测试部分我们需要关闭梯度计算，因为测试的时候我们不需要更新参数，只需要计算损失和正确率即可。
+<br>
 
 最后我们来写主函数：
 ```python
@@ -164,6 +171,7 @@ if __name__ == '__main__':
 
 
 以上就是基于多层感知机的简单的分类任务，下面我会附上完整的代码，只需要修改"D:\Deep Learning for Beginners\Multi-Layer Perceptron\model\model.pth"这个模型保存路径即可直接运行。
+<br>
 
 完整代码：
 ```python
@@ -276,6 +284,7 @@ if __name__ == '__main__':
 
     test(model, test_dataloader, loss_function)
 ```
+<br>
 
 如果你能看到这里，相信你对我的纯代码向的讲解是可以接受的，我预计会继续写4-5篇文章，包基于**CNN**的MNIST手写数字识别，当前多层感知机的准确率大概在97%左右，CNN可以达到99%以上；**RNN**现在 的使用场景已经很少了我目前也没有找到比较合适的项目应该就不做了；我最熟悉的**LSTM/GRU**我会找一个股票预测的数据集带着各位同学做一个简单的时序预测项目，本质上LSTM/GRU就是RNN的变体，解决RNN的梯度消失/梯度爆炸的问题；**Transformer**这块我还在学习推导这一块，目前也没想好；**GCN**的项目我已经写完了，Cora数据集是一个包含2708个节点的论文引用网络，我们通过GCN仅靠图结构或特征把节点分成若干簇（GCN其实才是我的好友需要学习的内容，但是我想了一下图卷积神经网络，又是图又是卷积的，还是需要MLP和CNN打一个基础的）；最后就是**GAN生成对抗网络**，这个网络比较难我学的也比较浅，所以没想好做不做，但是用的也比较少，基本上常见的会用到的深度学习算法就这么多，这个系列大概是周更的样子，我尽量在一到两个月内更完。
 
